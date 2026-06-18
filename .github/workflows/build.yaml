@@ -1,0 +1,43 @@
+name: "flutter-actions"
+on:
+  workflow_dispatch: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'app_shell/**'
+      - 'packages/**'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+      - '.github/workflows/build.yaml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: bancolombia/flutter-setup-action@v1.1
+        with:
+          channel: 'stable'
+          flutter-version: '3.44.0'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Verify static analysis
+        run: flutter analyze
+
+      - name: Generate files (mf_example)
+        run: |
+          cd packages/mf_example
+          flutter pub run build_runner build --delete-conflicting-outputs
+
+      - name: Run tests (mf_example)
+        run: |
+          cd packages/mf_example
+          flutter test
