@@ -1,30 +1,54 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mf_example/mf_example.dart';
 
-import 'package:mf_example/main.dart';
+class MockTransferRepository implements TransferRepository {
+  bool transferCalled = false;
+  @override
+  Future<void> transferMoney({
+    required String fromAccount,
+    required String toAccount,
+    required double amount,
+  }) async {
+    transferCalled = true;
+  }
+}
+
+class MockFeeCalculator implements FeeCalculator {
+  @override
+  double calculateFee(double amount) => amount * 0.05;
+}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('TransferPage renders and triggers transfer with DI overrides', (WidgetTester tester) async {
+    final mockRepo = MockTransferRepository();
+    final mockCalc = MockFeeCalculator();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          transferRepositoryProvider.overrideWith((ref) => mockRepo),
+          feeCalculatorProvider.overrideWith((ref) => mockCalc),
+        ],
+        child: const MaterialApp(
+          home: TransferPage(),
+        ),
+      ),
+    );
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    // Verify title is rendered
+    expect(find.text('Money Transfer Micro-Frontend'), findsOneWidget);
+    
+    // Calculated fee for initial amount (100.00) under MockFeeCalculator should be 5.00
+    expect(find.text('\$5.00'), findsOneWidget);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Tap transfer button
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pumpAndSettle();
+
+    // Verify repository call and success UI message
+    expect(mockRepo.transferCalled, isTrue);
+    expect(find.textContaining('Transfer of \$100.00'), findsOneWidget);
   });
 }
