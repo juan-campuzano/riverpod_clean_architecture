@@ -1,10 +1,10 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mf_example/mf_example.dart';
-import '../../domain/implementations/fee_calculator_impl.dart';
-import '../../domain/implementations/transfer_repository_impl.dart';
+import '../../infrastructure/repositories/fee_calculator_impl.dart';
+import '../../infrastructure/repositories/transfer_repository_impl.dart';
 
-// Host app configuration providers
+// Host app configuration providers examples
 class AppConfig {
   final double transferFees;
   AppConfig({required this.transferFees});

@@ -29,8 +29,8 @@ Este repositorio ejemplifica un diseño de arquitectura limpia (Clean Architectu
 │
 └── app_shell/                   # Aplicación Host / Orquestador (Shell)
     ├── lib/
-    │   ├── domain/
-    │   │   └── implementations/
+    │   ├── infrastructure/
+    │   │   └── repositories/
     │   │       ├── transfer_repository_impl.dart # Implementación concreta del contrato
     │   │       └── fee_calculator_impl.dart      # Implementación concreta del contrato
     │   ├── config/

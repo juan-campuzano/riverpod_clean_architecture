@@ -5,8 +5,8 @@ import 'profile_di.dart';
 
 class AppDI {
   static List<Override> get overrides => [
-        ...MoneyTransferDI.overrides,
-        ...AuthDI.overrides,
-        ...ProfileDI.overrides,
-      ];
+    ...MoneyTransferDI.overrides,
+    ...AuthDI.overrides,
+    ...ProfileDI.overrides,
+  ];
 }
