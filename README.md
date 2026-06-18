@@ -2,6 +2,8 @@
 
 Este repositorio ejemplifica un diseño de arquitectura limpia (Clean Architecture) para micro-frontends utilizando **Dart Workspaces** y **Riverpod** para la inyección de dependencias (DI) desacoplada.
 
+<img src="resources/screen.png" alt="App" style="width: 200; height: 400;">
+
 ---
 
 ## Estructura del Monorepo
