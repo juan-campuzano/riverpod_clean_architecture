@@ -1,0 +1,6 @@
+name: _riverpod_clean_architecture
+environment:
+  sdk: ^3.13.0-222.0.dev
+workspace:
+  - app
+  - packages/mf_example
